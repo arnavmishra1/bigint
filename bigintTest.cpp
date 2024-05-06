@@ -9,6 +9,7 @@
 #include <iostream>
 #include <ostream>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
@@ -20,17 +21,45 @@ class BigInt {
         BigInt();
         BigInt(int a) {
             digits = {};
-            int multiplier = 10;
             int size = to_string(a).length();
-            cout << size;
-            for(int i = 0; i < size; i++) {
-                cout << a % ( multiplier * 10^i ) << endl;
-                digits.push_back( a % ( multiplier * 10^i ) );
+            while (a > 0) {
+                char i = a % 10;
+                digits.push_back(i);
+                a = a / 10;
+            }
+
+            if (a == 0) {
+                digits.push_back('0');
+            }
+            /*string temp = to_string(a);
+            for (char i : temp) {
+                digits.push_back(i);
+            }*/
+        }
+        BigInt(string a) {
+            for (int i = a.size()-1; i > 0; i--) {
+                digits.push_back(char(a[i]));
+            }
+
+            if (a.size() == 0) {
+                digits.push_back('0');
             }
         }
-        BigInt(string);
 
-        BigInt operator+ (BigInt);
+        BigInt operator+ (BigInt a) {
+            vector<int> temp = {};
+            vector<int> carry;
+            int loop;
+            if (digits.size() > a.size()) {
+                loop = digits.size();
+            } else {
+                loop = a.size();
+            }
+            for (int i = loop-1; i > 0; i--) {
+                int sum = digits[i] + a[i];
+                temp.push_back(int(digits[i] + a[i]));
+            }
+        }
         BigInt operator- (BigInt);
         BigInt operator- (int);
         BigInt operator* (BigInt);
@@ -39,7 +68,7 @@ class BigInt {
         BigInt operator++(int);
         BigInt operator++( );
         BigInt operator[](int i) { // index function
-            return digits[-1-i];
+            return digits[i];
         }
 
         void print() {
