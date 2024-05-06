@@ -20,21 +20,15 @@ class BigInt {
     public:
         BigInt();
         BigInt(int a) {
-            digits = {};
-            int size = to_string(a).length();
-            while (a > 0) {
-                char i = a % 10;
-                digits.push_back(i);
-                a = a / 10;
-            }
-
             if (a == 0) {
                 digits.push_back('0');
             }
-            /*string temp = to_string(a);
-            for (char i : temp) {
-                digits.push_back(i);
-            }*/
+            while (a > 0) {
+                int i = a % 10;
+                char temp = to_string(i)[0];
+                digits.push_back(temp);
+                a = a / 10;
+            }
         }
         BigInt(string a) {
             for (int i = a.size()-1; i > 0; i--) {
@@ -98,7 +92,8 @@ class BigInt {
         BigInt fibo(); // calls fiboHelper
         BigInt fact();
         friend ostream& operator<<(ostream& out, const BigInt& var) {
-            cout << var << endl;
+            cout << var.digits[-1];
+            cout << endl;
         }
         friend BigInt operator+ (int, BigInt);
 };
