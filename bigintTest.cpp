@@ -51,13 +51,24 @@ class BigInt {
             vector<int> carry;
             int loop;
             if (digits.size() > a.size()) {
-                loop = digits.size();
+                while (digits.size() > a.size()) {
+                    a.digits.push_back('0');
+                }
             } else {
-                loop = a.size();
+                while (digits.size() < a.size()) {
+                    digits.push_back('0');
+                }
             }
-            for (int i = loop-1; i > 0; i--) {
-                int sum = digits[i] + a[i];
-                temp.push_back(int(digits[i] + a[i]));
+
+            for (int i = 0; i < digits.size(); i++) {
+                temp.push_back(char(digits[i] + a.digits[i]));
+            }
+
+            for (int i = 0; i < temp.size(); i++) {
+                if (int(temp[i]) > 9) {
+                    temp[i] = char(int(temp[i]) - 10);
+                    temp[i+1] = char(int(temp[i+1]) + 1);
+                }
             }
         }
         BigInt operator- (BigInt);
@@ -68,7 +79,7 @@ class BigInt {
         BigInt operator++(int);
         BigInt operator++( );
         BigInt operator[](int i) { // index function
-            return digits[i];
+            
         }
 
         void print() {
