@@ -48,13 +48,18 @@ class BigInt {
 
         BigInt operator+ (BigInt a) {
             // pad bigints if length is different
+            // a remove and this remove - used to remove excess zeroes after calculations are done
+            int ar = 0;
+            int tr = 0;
             if (digits.size() > a.size()) {
                 while (digits.size() > a.size()) {
                     a.digits.push_back('0');
+                    ar++;
                 }
             } else {
                 while (digits.size() < a.size()) {
                     digits.push_back('0');
+                    tr++;
                 }
             }
 
@@ -79,11 +84,23 @@ class BigInt {
             if (sum[0] == 0) {
                 i = 1;
             }
-            // concatenate the vector as a string and return a bigint made with that string
+            // concatenate the vector as a string
             string fin;
             for (i; i < sum.size(); i++) {
                 fin += to_string(sum[i]);
             }
+
+            // removing excess zeroes
+            while (ar > 0) {
+                a.digits.pop_back();
+                ar--;
+            }
+            while (tr > 0) {
+                digits.pop_back();
+                tr--;
+            }
+
+            // return a bigint made with the concatenated string
             return BigInt(fin);
         }
 
@@ -131,8 +148,7 @@ class BigInt {
             return out;
         }
         friend BigInt operator+ (int a, BigInt b) {
-            BigInt num(a);
-            return num + b;
+            return BigInt(BigInt(a) + b);
         }
 };
 
@@ -182,7 +198,7 @@ int main() {
     cout << myNum << endl;
     cout << yourNum << endl;
     cout << (myNum + yourNum) << endl;
-    cout << "int + big" << 30 + myNum << endl;
-    cout << "big + int" << myNum + 30 << endl;
+    cout << "int + big " << 30 + myNum << endl;
+    cout << "big + int " << myNum + 30 << endl;
     return 0;
 }
