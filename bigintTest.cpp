@@ -11,6 +11,7 @@
 #include <vector>
 #include <math.h>
 
+
 using namespace std;
 
 class BigInt {
@@ -31,13 +32,15 @@ class BigInt {
             }
         }
         BigInt(string a) {
-            for (int i = a.size()-1; i > 0; i--) {
-                digits.push_back(char(a[i]));
+            if (a.length() == 0) {
+                digits.push_back('0');
+            } else {
+                for (int i = a.length()-1; i >= 0; i--) {
+                    digits.push_back(char(a[i]));
+                }
             }
 
-            if (a.size() == 0) {
-                digits.push_back('0');
-            }
+            
         }
 
         BigInt operator+ (BigInt a) {
@@ -72,8 +75,8 @@ class BigInt {
         BigInt operator% (BigInt);
         BigInt operator++(int);
         BigInt operator++( );
-        BigInt operator[](int i) { // index function
-            
+        char operator[](int i) { // index function
+            return digits[i];
         }
 
         void print() {
@@ -92,8 +95,20 @@ class BigInt {
         BigInt fibo(); // calls fiboHelper
         BigInt fact();
         friend ostream& operator<<(ostream& out, const BigInt& var) {
-            cout << var.digits[-1];
-            cout << endl;
+            vector<char>::const_iterator itr;
+
+            if (var.digits.size() < 13) {
+                for (itr = var.digits.end()-1; itr >= var.digits.begin(); itr--) {
+                    out << *itr;
+                }
+            } else {
+                out << var.digits[var.digits.size()-1] << '.';
+                for (itr = var.digits.end()-2; itr > var.digits.end()-8; itr--) {
+                    out << *itr;
+                }
+                out << 'e' << var.digits.size()-1;
+            }
+            return out;
         }
         friend BigInt operator+ (int, BigInt);
 };
@@ -101,7 +116,7 @@ class BigInt {
 int main() {
     //main function
     //testUnit();
-    BigInt myNum(356);
-    cout << myNum;
+    BigInt myNum("12345678901234567890");
+    cout << myNum << endl;
     return 0;
 }
