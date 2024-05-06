@@ -47,9 +47,7 @@ class BigInt {
         }
 
         BigInt operator+ (BigInt a) {
-            BigInt ret;
-            vector<int> temp;
-            vector<int> carry;
+            // pad bigints if length is different
             if (digits.size() > a.size()) {
                 while (digits.size() > a.size()) {
                     a.digits.push_back('0');
@@ -60,37 +58,35 @@ class BigInt {
                 }
             }
 
-            cout << *this << endl;
-            cout << a << endl;
-
-
+            // calculate sum into an int vector
+            vector<int> sum;
             for (int i = 0; i < digits.size(); i++) {
-                cout << "c: " << int(digits[i]) - 48 + int(a.digits[i]) - 48 << endl;
-                temp.push_back((int(digits[i]) - 48 + int(a.digits[i]) - 48));
-                cout << temp[i] << endl;
+                sum.push_back((int(digits[i]) - 48 + int(a.digits[i]) - 48));
             }
 
-            temp.push_back(0);
-            for (int i = 0; i < temp.size(); i++) {
-                if (temp[i] > 9) {
-                    cout << "!" << endl;
-                    temp[i] = temp[i] - 10;
-                    temp[i+1] = temp[i+1] + 1;
+            // add a zero in case the carry calculations add a digit
+            sum.push_back(0);
+            for (int i = 0; i < sum.size(); i++) {
+                if (sum[i] > 9) {
+                    sum[i] = sum[i] - 10;
+                    sum[i+1] = sum[i+1] + 1;
                 }
             }
             
-            reverse(temp.begin(), temp.end());
+            // reverse results to be in normal order, check if the added zero was used, set index to 1 if not
+            reverse(sum.begin(), sum.end());
             int i = 0;
-            if (temp[0] == 0) {
+            if (sum[0] == 0) {
                 i = 1;
             }
+            // concatenate the vector as a string and return a bigint made with that string
             string fin;
-            for (i; i < temp.size(); i++) {
-                fin += to_string(temp[i]);
+            for (i; i < sum.size(); i++) {
+                fin += to_string(sum[i]);
             }
-            ret = fin;
-            return ret;
+            return BigInt(fin);
         }
+
         BigInt operator- (BigInt);
         BigInt operator- (int);
         BigInt operator* (BigInt);
@@ -134,7 +130,10 @@ class BigInt {
             }
             return out;
         }
-        friend BigInt operator+ (int, BigInt);
+        friend BigInt operator+ (int a, BigInt b) {
+            BigInt num(a);
+            return num + b;
+        }
 };
 
 /*void testUnit() {
@@ -178,10 +177,12 @@ class BigInt {
 int main() {
     //main function
     //testUnit();
-    BigInt myNum("01");
+    BigInt myNum(1);
     BigInt yourNum(900);
     cout << myNum << endl;
     cout << yourNum << endl;
     cout << (myNum + yourNum) << endl;
+    cout << "int + big" << 30 + myNum << endl;
+    cout << "big + int" << myNum + 30 << endl;
     return 0;
 }
