@@ -18,7 +18,16 @@ using namespace std;
 class BigInt {
     private:
         vector<char> digits;
-        BigInt fiboHelper(BigInt n, BigInt a = 0, BigInt b = 1);
+        BigInt fiboHelper(BigInt n, BigInt a, BigInt b) {
+            cout << "a,b - " << a << " " << b << endl;
+            if (n == 0) {
+                return a;
+            } else if (n == 1) {
+                return b;
+            } else {
+                return fiboHelper((n-1), b, a + b);
+            }
+        }
     public:
         BigInt() {}
         BigInt(int a) {
@@ -65,8 +74,8 @@ class BigInt {
 
             // calculate sum into an int vector
             vector<int> sum;
-            for (int i = 0; i < digits.size(); i++) {
-                sum.push_back((int(digits[i]) - 48 + int(a.digits[i]) - 48));
+            for (int i = 0; i < (*this).size(); i++) {
+                sum.push_back((int((*this)[i]) - 48 + int(a[i]) - 48));
             }
 
             // add a zero in case the carry calculations add a digit
@@ -104,13 +113,96 @@ class BigInt {
             return BigInt(fin);
         }
 
-        BigInt operator- (BigInt);
-        BigInt operator- (int);
+        BigInt operator- (BigInt a) {
+            // pad bigints if length is different
+            // a remove and this remove - used to remove excess zeroes after calculations are done
+            int ar = 0;
+            int tr = 0;
+            if (digits.size() > a.size()) {
+                while (digits.size() > a.size()) {
+                    a.digits.push_back('0');
+                    ar++;
+                }
+            } else {
+                while (digits.size() < a.size()) {
+                    digits.push_back('0');
+                    tr++;
+                }
+            }
+
+            // calculate diff into an int vector
+            vector<int> diff;
+            for (int i = 0; i < (*this).size(); i++) {
+                diff.push_back((int((*this)[i]) - int(a[i])));
+            }
+
+            for (int i : diff) {
+                cout << i;
+            }
+            cout << endl;
+
+            // "carry"
+            for (int i = 0; i < diff.size(); i++) {
+                if (diff[i] < 0) {
+                    diff[i] = diff[i] + 10;
+                    diff[i+1] = diff[i+1] - 1;
+                }
+            }
+
+            for (int i : diff) {
+                cout << i;
+            }
+            cout << endl;
+            
+            // reverse results to be in normal order, check if first digit is 0, set index to 1 if it is
+            reverse(diff.begin(), diff.end());
+            int i = 0;
+            if (diff[0] == 0) {
+                i = 1;
+            }
+
+            for (int i : diff) {
+                cout << i;
+            }
+            cout << endl;
+
+            // concatenate the vector as a string
+            string fin;
+            for (i; i < diff.size(); i++) {
+                fin += to_string(diff[i]);
+            }
+
+            // removing excess zeroes
+            while (ar > 0) {
+                a.digits.pop_back();
+                ar--;
+            }
+            while (tr > 0) {
+                digits.pop_back();
+                tr--;
+            }
+
+            // return a bigint made with the concatenated string
+            return BigInt(fin);
+        }
+        BigInt operator- (int a) {
+            BigInt temp(a);
+            return (*this) - a;
+        }
         BigInt operator* (BigInt);
         BigInt operator/ (BigInt);
         BigInt operator% (BigInt);
-        BigInt operator++(int);
-        BigInt operator++( );
+        // a++
+        BigInt operator++(int a) {
+            BigInt temp(*this);
+            ++*this;
+            return temp;
+        }
+        // ++a
+        BigInt operator++() {
+            *this = *this + BigInt(1);
+            return *this;
+        }
         char operator[](int i) { // index function
             return digits[i];
         }
@@ -129,7 +221,9 @@ class BigInt {
             }
             return count;
         }
-        BigInt fibo(); // calls fiboHelper
+        BigInt fibo() { // calls fiboHelper
+            return fiboHelper((*this), 0, 1);
+        }
         BigInt fact();
         friend ostream& operator<<(ostream& out, const BigInt& var) {
             vector<char>::const_iterator itr;
@@ -148,7 +242,68 @@ class BigInt {
             return out;
         }
         friend BigInt operator+ (int a, BigInt b) {
-            return BigInt(BigInt(a) + b);
+            return BigInt(a) + b;
+        }
+
+        bool operator==(int a) {
+            cout << "int" << endl;
+            BigInt temp(a);
+            int i = 0;
+            while (i < (*this).size() && i < temp.size()) {
+                if ((*this)[i] != temp[i]) {
+                    return false;
+                }
+                i++;
+            }
+            return true;
+        }
+        bool operator==(BigInt a) {
+            cout << "big" << endl;
+            int i = 0;
+            while (i < (*this).size() && i < a.size()) {
+                if ((*this)[i] != a[i]) {
+                    return false;
+                }
+                i++;
+            }
+            return true;
+        }
+        bool operator!=(int a) {
+            cout << "intnot" << endl;
+            BigInt temp(a);
+            int i = 0;
+            while (i < (*this).size() && i < temp.size()) {
+                if ((*this)[i] != temp[i]) {
+                    return true;
+                }
+                i++;
+            }
+            return false;
+        }
+        bool operator!=(BigInt a) {
+            cout << "bignot" << endl;
+            int i = 0;
+            while (i < (*this).size() && i < a.size()) {
+                cout << "check" << endl;
+                if ((*this)[i] != a[i]) {
+                    cout << "returnedfalse" << endl;
+                    return true;
+                }
+                i++;
+            }
+            return false;
+        }
+
+        // a--
+        BigInt operator--(int a) {
+            BigInt temp(*this);
+            --*this;
+            return temp;
+        }
+        // --a
+        BigInt operator--() {
+            *this = *this - BigInt(1);
+            return *this;
         }
 };
 
@@ -193,12 +348,22 @@ class BigInt {
 int main() {
     //main function
     //testUnit();
-    BigInt myNum(1);
-    BigInt yourNum(900);
-    cout << myNum << endl;
-    cout << yourNum << endl;
-    cout << (myNum + yourNum) << endl;
-    cout << "int + big " << 30 + myNum << endl;
-    cout << "big + int " << myNum + 30 << endl;
+    BigInt myNum(900);
+    BigInt yourNum(30);
+    //cout << myNum << endl;
+    //cout << yourNum << endl;
+    // if (myNum == yourNum) {
+    //     cout << "wow!" << endl;
+    // } else if (myNum != yourNum) {
+    //     cout << "wow :(" << endl;
+    // } else {
+    //     cout << "not wow" << endl;
+    // }
+    cout << "fibos: " << endl;
+    for (int i = 0; i < 4; i++) {
+        BigInt temp(i);
+        cout << i << "- " << temp.fibo() << endl;
+    }
+    cout << "3289478923473298479023904- " << BigInt("3289478923473298479023904").fibo() << endl;
     return 0;
 }
