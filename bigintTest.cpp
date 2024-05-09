@@ -18,14 +18,15 @@ using namespace std;
 class BigInt {
     private:
         vector<char> digits;
-        BigInt fiboHelper(BigInt n, BigInt a, BigInt b) {
-            cout << "a,b - " << a << " " << b << endl;
+        BigInt fiboHelper(BigInt n, BigInt a = 0, BigInt b = 1) {
             if (n == 0) {
+                cout << "n: " << n << " = " << (n==0) << endl;
                 return a;
             } else if (n == 1) {
                 return b;
             } else {
-                return fiboHelper((n-1), b, a + b);
+                cout << "a,b " << a << "," << b << endl;
+                return fiboHelper(n-1, b, a + b);
             }
         }
     public:
@@ -186,8 +187,7 @@ class BigInt {
             return BigInt(fin);
         }
         BigInt operator- (int a) {
-            BigInt temp(a);
-            return (*this) - a;
+            return (*this) - BigInt(a);
         }
         BigInt operator* (BigInt);
         BigInt operator/ (BigInt);
@@ -222,7 +222,7 @@ class BigInt {
             return count;
         }
         BigInt fibo() { // calls fiboHelper
-            return fiboHelper((*this), 0, 1);
+            return fiboHelper((*this));
         }
         BigInt fact();
         friend ostream& operator<<(ostream& out, const BigInt& var) {
@@ -245,8 +245,8 @@ class BigInt {
             return BigInt(a) + b;
         }
 
+        // this function terminates without returning false on 100 == 0. maybe just have a check for diff length before loop
         bool operator==(int a) {
-            cout << "int" << endl;
             BigInt temp(a);
             int i = 0;
             while (i < (*this).size() && i < temp.size()) {
@@ -360,10 +360,9 @@ int main() {
     //     cout << "not wow" << endl;
     // }
     cout << "fibos: " << endl;
-    for (int i = 0; i < 4; i++) {
-        BigInt temp(i);
-        cout << i << "- " << temp.fibo() << endl;
-    }
-    cout << "3289478923473298479023904- " << BigInt("3289478923473298479023904").fibo() << endl;
+
+    BigInt fiber("100");
+    
+    cout << "100: \n" << fiber.fibo() << endl;
     return 0;
 }
