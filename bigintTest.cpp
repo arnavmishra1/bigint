@@ -242,7 +242,7 @@ class BigInt {
         }
         bool operator==(BigInt a) {
             int i = 0;
-            while (i < (*this).size() && i < a.size()) {
+            while (i < (*this).size() || i < a.size()) {
                 if ((*this)[i] != a[i]) {
                     return false;
                 }
@@ -253,7 +253,7 @@ class BigInt {
         bool operator!=(int a) {
             BigInt temp(a);
             int i = 0;
-            while (i < (*this).size() && i < temp.size()) {
+            while (i < (*this).size() || i < temp.size()) {
                 if ((*this)[i] != temp[i]) {
                     return true;
                 }
@@ -263,7 +263,7 @@ class BigInt {
         }
         bool operator!=(BigInt a) {
             int i = 0;
-            while (i < (*this).size() && i < a.size()) {
+            while (i < (*this).size() || i < a.size()) {
                 if ((*this)[i] != a[i]) {
                     return true;
                 }
@@ -326,10 +326,10 @@ class BigInt {
 int main() {
     //main function
     //testUnit();
-    BigInt myNum(900);
-    BigInt yourNum(30);
-    //cout << myNum << endl;
-    //cout << yourNum << endl;
+    // BigInt myNum(900);
+    // BigInt yourNum(30);
+    // cout << myNum << endl;
+    // cout << yourNum << endl;
     // if (myNum == yourNum) {
     //     cout << "wow!" << endl;
     // } else if (myNum != yourNum) {
@@ -337,12 +337,21 @@ int main() {
     // } else {
     //     cout << "not wow" << endl;
     // }
-    cout << "fibos: " << endl;
+    // cout << "fibos: " << endl;
 
-    BigInt fiber("100");
+    // BigInt fiber("356");
     
-    BigInt fibres = fiber.fibo();
-    cout << "100: " << endl;
-    cout << fibres << endl;
+    // BigInt fibres = fiber.fibo();
+    // cout << "100: " << endl;
+    // cout << fibres << endl;
+
+    // cout << "\n\n113 == 113:" << endl;
+    // BigInt nyan(113);
+    // cout << (nyan == 113) << endl;
+
+    cout << "vvv fibo tester vvv\n" << endl;
+    for(int i = 0; i < 35; i++) {
+        cout << "i: " << setw(2) << i << " - fibo: " << BigInt(i).fibo() << endl;
+    }
     return 0;
 }
