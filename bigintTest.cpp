@@ -194,9 +194,8 @@ class BigInt {
             BigInt result(0);
             BigInt temp = *this;
             while (temp > a) {
-                result++;
                 temp = temp - a;
-                
+                ++result;
             }
             return result;
         }
@@ -378,6 +377,7 @@ void testUnit() {
 
 int main() {
     //main function
+
     testUnit();
 
     return 0;
