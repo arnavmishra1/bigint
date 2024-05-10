@@ -172,9 +172,38 @@ class BigInt {
         BigInt operator- (int a) {
             return (*this) - BigInt(a);
         }
-        BigInt operator* (BigInt);
-        BigInt operator/ (BigInt);
-        BigInt operator% (BigInt);
+        BigInt operator* (BigInt a) {
+            BigInt small = (*this);
+            BigInt temp = a;
+
+            if (small > temp) {
+                small = temp;
+                temp = (*this);
+            }
+
+            BigInt prod(temp);
+
+            if (small > 1 && temp > 1) {
+                for (BigInt i(0); a > (i+1); i++) {
+                    prod = prod + temp;
+                }
+            }
+            return prod;
+        }
+        BigInt operator/ (BigInt a) {
+            BigInt result(0);
+            BigInt temp = *this;
+            while (temp > a) {
+                result++;
+                temp = temp - a;
+                
+            }
+            return result;
+        }
+        BigInt operator% (BigInt a) {
+            BigInt temp(*this / a);
+            return *this - (a * (temp - 0));
+        }
         // a++
         BigInt operator++(int a) {
             BigInt temp(*this);
@@ -207,7 +236,14 @@ class BigInt {
         BigInt fibo() { // calls fiboHelper
             return fiboHelper((*this));
         }
-        BigInt fact();
+        BigInt fact() {
+            BigInt temp(1);
+
+            for (BigInt i(*this); i > 0; i--) {
+                temp = temp * i;
+            }
+            return temp;
+        }
         friend ostream& operator<<(ostream& out, const BigInt& var) {
             vector<char>::const_iterator itr;
 
@@ -283,9 +319,26 @@ class BigInt {
             *this = *this - BigInt(1);
             return *this;
         }
+
+        bool operator>(BigInt a) {
+            if ((*this).size() > a.size()) {
+                return true;
+            } else if ((*this).size() < a.size()) {
+                return false;
+            } else {
+                for (int i = (*this).size(); i >= 0; i--) {
+                    if (int(digits[i]) > int(a[i])) {
+                        return true;
+                    } else if (int(digits[i]) < int(a[i])){
+                        return false;
+                    }
+                }
+            }
+            return false;
+        } 
 };
 
-/*void testUnit() {
+void testUnit() {
     int space = 10;
     cout << "\a\nTestUnit:\n"<<flush;
     system("whoami");
@@ -321,37 +374,11 @@ class BigInt {
     cout << "++s1 = ? --> before:"<<++s1<<" after:"<<s1<<endl;
     cout << "s2 * big = ? --> "<< s2 * big<<endl;
     cout << "big * s2 = ? --> "<< big * s2<<endl;
-}*/
+}
 
 int main() {
     //main function
-    //testUnit();
-    // BigInt myNum(900);
-    // BigInt yourNum(30);
-    // cout << myNum << endl;
-    // cout << yourNum << endl;
-    // if (myNum == yourNum) {
-    //     cout << "wow!" << endl;
-    // } else if (myNum != yourNum) {
-    //     cout << "wow :(" << endl;
-    // } else {
-    //     cout << "not wow" << endl;
-    // }
-    // cout << "fibos: " << endl;
+    testUnit();
 
-    // BigInt fiber("356");
-    
-    // BigInt fibres = fiber.fibo();
-    // cout << "100: " << endl;
-    // cout << fibres << endl;
-
-    // cout << "\n\n113 == 113:" << endl;
-    // BigInt nyan(113);
-    // cout << (nyan == 113) << endl;
-
-    cout << "vvv fibo tester vvv\n" << endl;
-    for(int i = 0; i < 35; i++) {
-        cout << "i: " << setw(2) << i << " - fibo: " << BigInt(i).fibo() << endl;
-    }
     return 0;
 }
