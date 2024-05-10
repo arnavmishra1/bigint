@@ -20,12 +20,10 @@ class BigInt {
         vector<char> digits;
         BigInt fiboHelper(BigInt n, BigInt a = 0, BigInt b = 1) {
             if (n == 0) {
-                cout << "n: " << n << " = " << (n==0) << endl;
                 return a;
             } else if (n == 1) {
                 return b;
             } else {
-                cout << "a,b " << a << "," << b << endl;
                 return fiboHelper(n-1, b, a + b);
             }
         }
@@ -137,11 +135,6 @@ class BigInt {
                 diff.push_back((int((*this)[i]) - int(a[i])));
             }
 
-            for (int i : diff) {
-                cout << i;
-            }
-            cout << endl;
-
             // "carry"
             for (int i = 0; i < diff.size(); i++) {
                 if (diff[i] < 0) {
@@ -149,11 +142,6 @@ class BigInt {
                     diff[i+1] = diff[i+1] - 1;
                 }
             }
-
-            for (int i : diff) {
-                cout << i;
-            }
-            cout << endl;
             
             // reverse results to be in normal order, check if first digit is 0, set index to 1 if it is
             reverse(diff.begin(), diff.end());
@@ -161,11 +149,6 @@ class BigInt {
             if (diff[0] == 0) {
                 i = 1;
             }
-
-            for (int i : diff) {
-                cout << i;
-            }
-            cout << endl;
 
             // concatenate the vector as a string
             string fin;
@@ -249,7 +232,7 @@ class BigInt {
         bool operator==(int a) {
             BigInt temp(a);
             int i = 0;
-            while (i < (*this).size() && i < temp.size()) {
+            while (i < (*this).size() || i < temp.size()) {
                 if ((*this)[i] != temp[i]) {
                     return false;
                 }
@@ -258,7 +241,6 @@ class BigInt {
             return true;
         }
         bool operator==(BigInt a) {
-            cout << "big" << endl;
             int i = 0;
             while (i < (*this).size() && i < a.size()) {
                 if ((*this)[i] != a[i]) {
@@ -269,7 +251,6 @@ class BigInt {
             return true;
         }
         bool operator!=(int a) {
-            cout << "intnot" << endl;
             BigInt temp(a);
             int i = 0;
             while (i < (*this).size() && i < temp.size()) {
@@ -281,12 +262,9 @@ class BigInt {
             return false;
         }
         bool operator!=(BigInt a) {
-            cout << "bignot" << endl;
             int i = 0;
             while (i < (*this).size() && i < a.size()) {
-                cout << "check" << endl;
                 if ((*this)[i] != a[i]) {
-                    cout << "returnedfalse" << endl;
                     return true;
                 }
                 i++;
@@ -363,6 +341,8 @@ int main() {
 
     BigInt fiber("100");
     
-    cout << "100: \n" << fiber.fibo() << endl;
+    BigInt fibres = fiber.fibo();
+    cout << "100: " << endl;
+    cout << fibres << endl;
     return 0;
 }
